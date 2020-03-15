@@ -26,12 +26,19 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
     self.uuid = uuid;
     self.listenForOthers = listenForOthers;
     self.checkResponse = checkResponse;
+    self.checkOtherTrack = checkOtherTrack;
+    self.setWeaponsListener = setWeaponsListener;
+    var weaponsListener;
     
     
     
     function initialize(hash){
         console.log("Alone service ini");
         uuid = hash;
+    }
+
+    function setWeaponsListener(fnListener) {
+        weaponsListener = fnListener;
     }
 
     function listenForOthers(){
@@ -77,31 +84,36 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
         
     }
 
-    // function checkOtherTrack(){
-    //     //console.log(currentChannel);
-    //     if(currentChannel == 1){
-    //         otherChannel = 0;
-    //     }
-    //     if(currentChannel == 0){
-    //         otherChannel = 1;
-    //     }
-    //     self.otherTopic = `${brokerDetails.UUID}/channel/${otherChannel}`;
-    //     console.log("other channel: "+self.otherTopic);
+    function checkOtherTrack(){
+        //console.log(currentChannel);
+        if(currentChannel == 1){
+            otherChannel = 0;
+        }
+        if(currentChannel == 0){
+            otherChannel = 1;
+        }
+        self.otherTopic = `${brokerDetails.UUID}/channel/${otherChannel}`;
+        console.log("other channel: "+self.otherTopic);
 
-    //     messageService.subscribe(self.otherTopic, serviceName, function(message){
-    //         if(message.topic == self.otherTopic){
-    //             console.log("hash: " + uuid);
-    //             console.log("message: " + message.payloadString.replace(/"/g,""));
-    //             if(!(uuid==message.payloadString.replace(/"/g,""))){
-    //                 console.log("RESPONSE!");
-    //                 weapons = true;
-                    
-    //             }
-    //         }
-    //     });
+        messageService.subscribe(self.otherTopic, serviceName, function(message){
+            if(message.topic == self.otherTopic){
+                console.log("hash: " + uuid);
+                console.log("message: " + message.payloadString.replace(/"/g,""));
+                if(!(uuid==message.payloadString.replace(/"/g,""))){
+                    console.log("RESPONSE!");
+                    if (weaponsListener) {
+                        weaponsListener();
+                    }
+                }
+            }
+        });
 
-    //     messageService.publish(self.otherTopic, JSON.stringify(uuid));
+        messageService.publish(self.otherTopic, JSON.stringify(uuid));
+    }
+
+
+    // function publishOnClose(){
+
     // }
-
     
 }

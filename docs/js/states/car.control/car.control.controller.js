@@ -31,7 +31,7 @@
         var changed = false;
 
         var channel = $stateParams.channel;
-        var WEAPONS_DISABLED = false;
+        var WEAPONS_DISABLED = true;
 
         const DEFAULT_THROTTLE = 0;
         const WEAPON_DELAY_MS = 5000;
@@ -59,13 +59,17 @@
         vm.stop = stop;
 
         
+        aloneService.setWeaponsListener(toggleWeapons);
+        function toggleWeapons(){
+            vm.WEAPONS_DISABLED = false;
+        }
+        aloneService.checkOtherTrack();
+
+        
+        
         var throttleTopic = `${brokerDetails.UUID}/control/${channel}/throttle`;
         var getResourcesTopic = `${brokerDetails.UUID}/resources`;
         var resourceStateTopic = `${brokerDetails.UUID}/control/{channel}/{resourceId}/state`;
-
-
-
-            
 
 
         //subscribe to channel throttle
@@ -74,16 +78,15 @@
         // subscribe to channel resources
         messageService.subscribe(getResourcesTopic);
         
-        /*
-        Stops the car and returns user back to the index page,
-        */
+        
+        //Stops the car and returns user back to the splashscreen
         function stop() {
            var retryOrNot = false;
             messageService.disconnect(retryOrNot);
             
         }
 
-       
+       //sets id of special weapon to be used
         var rID;
         function setId(id){
             vm.WEAPONS_DISABLED = true;
@@ -102,6 +105,7 @@
             fireSpecialWeapon(rID);
         }
 
+        //fires special weapon
         function fireSpecialWeapon(resourceId) {
             let payload = {
                 state: "requested",
@@ -111,19 +115,15 @@
         }
 
         
-        /*
-        If user navigates to a different webpage stop the car.
-        When this state is navigated to the onhashchange function 
-        is called which is ignored. 
-        */
-        // window.onhashchange = function () {
-        //     if (changed) {
-        //         console.log('changed');
-        //         stop();
-        //     } else {
-        //         changed = true;
-        //     }
-        // }
+        
+        window.onclose = function () {
+            if (changed) {
+                console.log('changed');
+                stop();
+            } else {
+                changed = true;
+            }
+        }
 
       
         messageService.subscribe(throttleTopic,stateName, function(message){
