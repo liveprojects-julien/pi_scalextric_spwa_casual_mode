@@ -28,7 +28,10 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
     self.checkResponse = checkResponse;
     self.checkOtherTrack = checkOtherTrack;
     self.setWeaponsListener = setWeaponsListener;
+    self.checkIfPlayerHasLeft = checkIfPlayerHasLeft;
+    self.setDisableListener = setDisableListener;
     var weaponsListener;
+    var disableListener;
     
     
     
@@ -39,6 +42,10 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
 
     function setWeaponsListener(fnListener) {
         weaponsListener = fnListener;
+    }
+
+    function setDisableListener(fnListener) {
+        disableListener = fnListener;
     }
 
     function listenForOthers(){
@@ -104,6 +111,8 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
                     if (weaponsListener) {
                         weaponsListener();
                     }
+                }if(message.payloadString.replace(/"/g,"") == " "){
+                    console.log("other player has left");
                 }
             }
         });
@@ -112,8 +121,40 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
     }
 
 
-    // function publishOnClose(){
-
-    // }
+    
+    function checkIfPlayerHasLeft(){
+        if(currentChannel == 1){
+            otherChannel = 0;
+        }
+        if(currentChannel == 0){
+            otherChannel = 1;
+        }
+        self.otherTopic = `${brokerDetails.UUID}/channel/${otherChannel}`;
+        console.log("other channel: "+self.otherTopic);
+        var response = false;
+        messageService.subscribe(self.otherTopic, serviceName, function(message){
+            if(message.topic == self.otherTopic){
+                console.log("hash: " + uuid);
+                console.log("message: " + message.payloadString.replace(/"/g,""));
+                if(!(uuid==message.payloadString.replace(/"/g,""))){
+                    response = true;
+                }
+            }
+        });
+        messageService.publish(self.otherTopic, JSON.stringify(uuid));
+        $timeout(
+            function () {
+                if(!response){
+                    if (disableListener) {
+                        disableListener();
+                    }
+                }else{
+                    if (weaponsListener) {
+                        weaponsListener();
+                    }
+                }
+            }, DELAY_MS);
+        
+    }
     
 }

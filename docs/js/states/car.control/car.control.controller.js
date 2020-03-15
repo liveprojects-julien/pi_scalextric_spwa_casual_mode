@@ -12,7 +12,8 @@
         'brokerDetails',
         'messageService',
         'aloneService',
-        '$timeout'
+        '$timeout',
+        '$interval'
         ];
     
     function carControlCtrl(
@@ -22,7 +23,8 @@
         brokerDetails,
         messageService,
         aloneService,
-        $timeout
+        $timeout,
+        $interval
     ) {
         
         var vm = this;
@@ -65,6 +67,18 @@
         }
         aloneService.checkOtherTrack();
 
+        aloneService.setDisableListener(disableWeapons);
+        function disableWeapons(){
+            vm.WEAPONS_DISABLED = true;
+        }
+
+        //function called every 5 seconds to check if a player has left
+        function dataTime() {
+            aloneService.checkIfPlayerHasLeft();
+        }
+        // start interval 
+        var interval = $interval(dataTime, 5000);
+
         
         
         var throttleTopic = `${brokerDetails.UUID}/control/${channel}/throttle`;
@@ -81,9 +95,9 @@
         
         //Stops the car and returns user back to the splashscreen
         function stop() {
-           var retryOrNot = false;
+            aloneService.publishOnClose();
+            var retryOrNot = false;
             messageService.disconnect(retryOrNot);
-            
         }
 
        //sets id of special weapon to be used
@@ -115,15 +129,6 @@
         }
 
         
-        
-        window.onclose = function () {
-            if (changed) {
-                console.log('changed');
-                stop();
-            } else {
-                changed = true;
-            }
-        }
 
       
         messageService.subscribe(throttleTopic,stateName, function(message){
