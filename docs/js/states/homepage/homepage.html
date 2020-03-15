@@ -1,0 +1,13 @@
+<uiview>
+    <div>
+        <!-- <form name="setup_form" ng-submit="vm.go(setup_form.$valid)">
+            Channel <select ng-model="vm.channel" ng-options="c for c in vm.channels" required> </select> <br>
+            <input type="submit" value="Go" ng-disabled="setup_form.$invalid"></input>       
+        </form>   -->
+
+        <form name="setup_form" ng-submit="vm.go(setup_form.$valid)">
+            Channel <select ng-model="vm.channel" ng-options="c for c in vm.channels" required></select>
+            <button id="go-btn" type="submit" class="btn btn-primary" ng-disabled="setup_form.$invalid">Go</button>
+        </form>
+    </div>
+</uiview>

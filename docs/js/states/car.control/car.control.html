@@ -1,0 +1,36 @@
+<uiview>
+    <div id="quitDiv">
+      <button id="quit" type="submit" class="btn btn-primary" ng-click="vm.stop()">Quit</button>
+    </div>
+   
+    <!-- <span ng-bind="vm.throttle" ng-show="!vm.throttleError"></span> -->
+    <span ng-show="vm.throttleError">Error</span>
+    <div id="slider">
+        <input type="range" id="throttle" min="0" max="100" value="0" orient="vertical" class="throttle" ng-model="vm.throttle">
+    </div>
+    <!-- <span ng-bind="vm.actualThrottle"></span> -->
+    
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <button type="button" ng-disabled="vm.WEAPONS_DISABLED" class="btn btn-primary btn-lg btn-block" style="border-radius: 0;" ng-click="vm.setId(0)">Oil</button>        
+          </div>
+          <div class="carousel-item">
+            <button type="button" ng-disabled="vm.WEAPONS_DISABLED" class="btn btn-primary btn-lg btn-block" style="border-radius: 0;" ng-click="vm.setId(1)">Puncture</button>        
+          </div>
+          <div class="carousel-item">
+            <button type="button" ng-disabled="vm.WEAPONS_DISABLED" class="btn btn-primary btn-lg btn-block" style="border-radius: 0;" ng-click="vm.setId(2)">Bomb</button>        
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+</uiview>
+
+
