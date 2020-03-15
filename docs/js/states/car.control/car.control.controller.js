@@ -7,7 +7,6 @@
 
         carControlCtrl.$inject = [
         '$scope',
-        '$state',
         '$stateParams',
         'brokerDetails',
         'messageService',
@@ -18,7 +17,6 @@
     
     function carControlCtrl(
         $scope,
-        $state,
         $stateParams, 
         brokerDetails,
         messageService,
@@ -40,7 +38,6 @@
     
         var slider = document.getElementById("throttle");
         
-
         /*
         throttle : is the throttle percentage the user is demanding.
         actualThrottle : is the throttle percentage the real world car is at.
@@ -59,8 +56,7 @@
         vm.throttleError = false;
 
         vm.stop = stop;
-
-        
+ 
         aloneService.setWeaponsListener(toggleWeapons);
         function toggleWeapons(){
             vm.WEAPONS_DISABLED = false;
@@ -79,19 +75,15 @@
         // start interval 
         var interval = $interval(dataTime, 5000);
 
-        
-        
         var throttleTopic = `${brokerDetails.UUID}/control/${channel}/throttle`;
         var getResourcesTopic = `${brokerDetails.UUID}/resources`;
         var resourceStateTopic = `${brokerDetails.UUID}/control/{channel}/{resourceId}/state`;
-
 
         //subscribe to channel throttle
         messageService.subscribe(throttleTopic);
 
         // subscribe to channel resources
         messageService.subscribe(getResourcesTopic);
-        
         
         //Stops the car and returns user back to the splashscreen
         function stop() {
@@ -128,9 +120,6 @@
             messageService.publish(resourceStateTopic.replace(/\{resourceId\}/, resourceId).replace(/\{channel\}/, channel), JSON.stringify(payload));
         }
 
-        
-
-      
         messageService.subscribe(throttleTopic,stateName, function(message){
             if(message.topic == throttleTopic){
                 console.log(message.payloadString.replace(/"/g,""));
@@ -163,8 +152,6 @@
             }
         });
 
-        
-
         /*
         When users changes car throttle a change request is sent to server. 
         */
@@ -176,8 +163,6 @@
                 messageService.publish(throttleTopic, JSON.stringify(payload));
             }
         })
-
-        
-              
+     
     }
 })();

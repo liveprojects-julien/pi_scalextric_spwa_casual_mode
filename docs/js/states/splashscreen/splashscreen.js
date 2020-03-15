@@ -6,34 +6,28 @@
         .controller('splashscreenCtrl', splashscreenCtrl);
 
     splashscreenCtrl.$inject = [
-        '$scope',
         '$state',
         'mqttService',
         'brokerDetails',
         'messageService',
-        '$timeout',
         'uuid',
         'aloneService'
         ];
     
     function splashscreenCtrl(
-        $scope,
         $state,
         mqttService,
         brokerDetails,
         messageService,
-        $timeout,
         uuid,
         aloneService
     ) {
         var vm = this;
         var hash = uuid.v4();
         
-        
         vm.update = function(){
             
             console.log(brokerDetails);
-
 
             mqttService.initialize(brokerDetails.HOST, brokerDetails.PORT);
 
@@ -64,9 +58,6 @@
                 }
 
             },mqttOptions)
-
-
-            
 
         }
 

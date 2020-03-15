@@ -21,20 +21,14 @@ function messageService(mqttService, brokerDetails, $timeout) {
     self.disconnect = disconnect;
     self.resubscribe = resubscribe;
     
-    
-
     function initialize(){
         console.log("Message service ini");
     }
 
-
-    
-    //mqttService.onMessageArrived(messageService.onMessageArrived);
     function onNewMessage(message){
         console.log(registry[message.topic]);
         var subscribers = registry[message.topic]; 
         if(subscribers != null){
-           // subscribers.forEach(function(subscriber){ 
 
            var keys = Object.keys(subscribers);
             for(var index = 0; index < keys.length; index++){
@@ -47,13 +41,9 @@ function messageService(mqttService, brokerDetails, $timeout) {
                         console.log(message);
                     });
 
-
             }
                 
-           // });
         }
-        //console.log(JSON.stringify(message.topic));
-        //console.log(message);
     }
 
     function resubscribe(){

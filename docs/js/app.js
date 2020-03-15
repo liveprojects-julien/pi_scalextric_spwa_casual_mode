@@ -1,11 +1,8 @@
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
 (function () {
   angular.module('app', [
     'ui.router',// ADDED for page navigation
     'mainjs',// ADDED for our states module
-    'angular-uuid'
+    'angular-uuid'// ADDED for uuid generation
   ])
 
     .config(function ($urlRouterProvider){

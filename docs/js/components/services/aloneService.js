@@ -12,14 +12,11 @@ aloneService.$inject = [
 function aloneService(brokerDetails, messageService, $state, $timeout) {
     var self = this;
     var serviceName = 'alone_service';
-    var channelTopic0 = `${brokerDetails.UUID}/channel/0`;
-    var channelTopic1 = `${brokerDetails.UUID}/channel/1`;
     var currentTopic = "";
- 
     var currentChannel = -1;
-   
     var uuid;
     var DELAY_MS = 1000;
+
     self.initialize = initialize;
     self.currentChannel = currentChannel;
     self.currentTopic = currentTopic;
@@ -32,7 +29,6 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
     self.setDisableListener = setDisableListener;
     var weaponsListener;
     var disableListener;
-    
     
     
     function initialize(hash){
@@ -92,7 +88,6 @@ function aloneService(brokerDetails, messageService, $state, $timeout) {
     }
 
     function checkOtherTrack(){
-        //console.log(currentChannel);
         if(currentChannel == 1){
             otherChannel = 0;
         }
